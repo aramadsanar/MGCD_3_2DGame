@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using UnityEngine.UI;
 
 public class MovementScript : MonoBehaviour {
 
@@ -10,7 +11,7 @@ public class MovementScript : MonoBehaviour {
 	public float movement = 0f;
 	public Rigidbody2D rb;
 	public int score = 0;
-
+	public Text scoreText;
 	//Native touch driver's
 	bool moveAllowed = false;
 	float dy = 0.0f, dx = 0.0f;
@@ -18,6 +19,7 @@ public class MovementScript : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		rb = GetComponent<Rigidbody2D> ();
+		scoreText = GameObject.Find ("Text").GetComponent<Text> ();
 	}
 
 	//I can't find the startsWith function built into Unity, so I made it myself..
@@ -40,6 +42,7 @@ public class MovementScript : MonoBehaviour {
 			//TODO: Add score printing element on screen!
 			score++;
 			Debug.Log ("Current Score: " + score);
+			scoreText.text = ("Score: " + score);
 		}
 	}
 
