@@ -10,15 +10,17 @@ public class MovementScript : MonoBehaviour {
 	public float movement = 0f;
 	public Rigidbody2D rb;
 	public int score = 0;
+
+	//Native touch driver's
 	bool moveAllowed = false;
 	float dy = 0.0f, dx = 0.0f;
 
 	// Use this for initialization
 	void Start () {
 		rb = GetComponent<Rigidbody2D> ();
-		
 	}
 
+	//I can't find the startsWith function built into Unity, so I made it myself..
 	bool stringStartsWith(string input, string pattern) {
 		for (int i = 0; i < (pattern.Length); i++) {
 			if (input [i] != pattern [i])
@@ -26,18 +28,34 @@ public class MovementScript : MonoBehaviour {
 		}
 		return true;
 	}
+
 	void OnCollisionEnter2D(Collision2D c) {
+		//Diagnosis
 		Debug.Log (c.gameObject.name);
-		//"CoinSprite"
+
+		//TODO: Add support for real object detection, such as vegetables, junk foods and bonus packs, anyone?
 		if (stringStartsWith(c.gameObject.name, "CoinSprite")) {
-			score++;
 			Destroy (c.gameObject);
+
+			//TODO: Add score printing element on screen!
+			score++;
 			Debug.Log ("Current Score: " + score);
 		}
-		
 	}
+
 	// Update is called once per frame
 	void Update () {
+
+		//Keyboard driver. Geeks love keyboards, right? :)
+		movement = Input.GetAxis ("Vertical");
+		//Debug.Log ("Movement: " + movement + "\n");
+		if (movement >0f || movement <0f)
+			rb.velocity = new Vector2 (rb.velocity.x, movement * speed);
+		else 
+			rb.velocity = new Vector2 (rb.velocity.x, 0);
+
+
+		//Touch driver: through mouse emulation
 		//Gets the world position of the mouse on the screen        
 		Vector2 mousePosition = Camera.main.ScreenToWorldPoint( Input.mousePosition );
 
@@ -54,16 +72,10 @@ public class MovementScript : MonoBehaviour {
 				/*Input.mousePosition).x*/
 				this.transform.position = new Vector2(rb.position.x, Camera.main.ScreenToWorldPoint(Input.mousePosition).y);
 			}
-		}           
-	}
+		}
 
-		/*movement = Input.GetAxis ("Vertical");
-		//Debug.Log ("Movement: " + movement + "\n");
-		if (movement >0f || movement <0f)
-			rb.velocity = new Vector2 (rb.velocity.x, movement * speed);
-		else 
-			rb.velocity = new Vector2 (rb.velocity.x, 0);
-
+		//Disabled native touch driver as it feels clunky, if anyone could help with this, please do so :)
+		/*
 		if (Input.touchCount > 0) {
 			Touch t = Input.GetTouch (0);
 			Vector2 touchPos = Camera.main.ScreenToWorldPoint (t.position);
@@ -92,6 +104,6 @@ public class MovementScript : MonoBehaviour {
 		}
 
 		//if (Input.GetButtonDown("Jump"))
-		//	rb.velocity = new Vector2 (rb.velocity.x, jumpSpeed);
-	}*/
+		//	rb.velocity = new Vector2 (rb.velocity.x, jumpSpeed);*/
+	}
 }

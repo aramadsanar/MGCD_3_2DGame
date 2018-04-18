@@ -9,7 +9,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{8A3A7B60-0E04-E1C4-071B-6792558F2011}</ProjectGuid>
+    <ProjectGuid>{BE40F2CB-59DD-2435-7FF8-B51E0C771651}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp</AssemblyName>
@@ -183,7 +183,7 @@
  <HintPath>/home/armada-nasar/.local/share/umake/games/unity3d/Editor/Data/Managed/UnityEngine/UnityEngine.WindModule.dll</HintPath>
  </Reference>
  <Reference Include="Facebook.Unity.Settings">
- <HintPath>/home/armada-nasar/UnityProjects/2DRogue/2DGame/Library/FacebookSDK/Facebook.Unity.Settings.dll</HintPath>
+ <HintPath>/home/armada-nasar/UnityProjects/2DRogue/2DGame/MGCD_3_2DGame/Library/FacebookSDK/Facebook.Unity.Settings.dll</HintPath>
  </Reference>
  <Reference Include="UnityEngine.UI">
  <HintPath>/home/armada-nasar/.local/share/umake/games/unity3d/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
