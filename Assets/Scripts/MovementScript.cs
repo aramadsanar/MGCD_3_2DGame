@@ -4,6 +4,7 @@ using UnityEngine;
 using System;
 using UnityEngine.UI;
 
+
 public class MovementScript : MonoBehaviour {
 
 	public float speed = 5f;
@@ -14,12 +15,30 @@ public class MovementScript : MonoBehaviour {
 	public Text scoreText;
 	//Native touch driver's
 	bool moveAllowed = false;
+	//public GameObject[] arrayOfCoins = new GameObject[10240];
 	float dy = 0.0f, dx = 0.0f;
+	public Transform coinPrefab;
+	private IEnumerator coroutine;
 
 	// Use this for initialization
 	void Start () {
 		rb = GetComponent<Rigidbody2D> ();
 		scoreText = GameObject.Find ("Text").GetComponent<Text> ();
+		coroutine = WaitAndSpawn (0.4f);
+		StartCoroutine (coroutine);
+	}
+
+	private IEnumerator WaitAndSpawn(float waitTime)
+	{
+		while (true)
+		{
+			yield return new WaitForSeconds(waitTime);
+			print("WaitAndPrint " + Time.time);
+
+			Transform temp = Instantiate(coinPrefab, new Vector3(UnityEngine.Random.value, UnityEngine.Random.value, 0), Quaternion.identity);
+			Rigidbody2D rbtemp = temp.GetComponent<Rigidbody2D> ();
+			rbtemp.velocity = new Vector2(-2.0f, 0.0f);
+		}
 	}
 
 	//I can't find the startsWith function built into Unity, so I made it myself..
@@ -48,7 +67,6 @@ public class MovementScript : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-
 		//Keyboard driver. Geeks love keyboards, right? :)
 		movement = Input.GetAxis ("Vertical");
 		//Debug.Log ("Movement: " + movement + "\n");
