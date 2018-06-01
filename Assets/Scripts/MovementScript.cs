@@ -18,13 +18,15 @@ public class MovementScript : MonoBehaviour {
 	//public GameObject[] arrayOfCoins = new GameObject[10240];
 	float dy = 0.0f, dx = 0.0f;
 	public Transform coinPrefab;
+	public Transform opponentPrefab;
 	private IEnumerator coroutine;
-
+	private bool isCrippled = false;
+	private int count = 0;
 	// Use this for initialization
 	void Start () {
 		rb = GetComponent<Rigidbody2D> ();
 		scoreText = GameObject.Find ("Text").GetComponent<Text> ();
-		coroutine = WaitAndSpawn (0.4f);
+		coroutine = WaitAndSpawn (0.7f);
 		StartCoroutine (coroutine);
 	}
 
@@ -34,10 +36,17 @@ public class MovementScript : MonoBehaviour {
 		{
 			yield return new WaitForSeconds(waitTime);
 			print("WaitAndPrint " + Time.time);
+			if (count % 3 == 0) {
+				Transform temp = Instantiate (opponentPrefab, new Vector3 (10.0f, UnityEngine.Random.Range (-2.0f, 2.0f), 0), Quaternion.identity);
+				Rigidbody2D rbtemp = temp.GetComponent<Rigidbody2D> ();
+				rbtemp.velocity = new Vector2 (-2.0f, 0.0f);
+			} else {
+				Transform temp = Instantiate (coinPrefab, new Vector3 (10.0f, UnityEngine.Random.Range (-2.0f, 2.0f), 0), Quaternion.identity);
+				Rigidbody2D rbtemp = temp.GetComponent<Rigidbody2D> ();
+				rbtemp.velocity = new Vector2 (-2.0f, 0.0f);
+			}
 
-			Transform temp = Instantiate(coinPrefab, new Vector3(UnityEngine.Random.value, UnityEngine.Random.value, 0), Quaternion.identity);
-			Rigidbody2D rbtemp = temp.GetComponent<Rigidbody2D> ();
-			rbtemp.velocity = new Vector2(-2.0f, 0.0f);
+			count++;
 		}
 	}
 
@@ -55,28 +64,37 @@ public class MovementScript : MonoBehaviour {
 		Debug.Log (c.gameObject.name);
 
 		//TODO: Add support for real object detection, such as vegetables, junk foods and bonus packs, anyone?
-		if (stringStartsWith(c.gameObject.name, "CoinSprite")) {
+		if (stringStartsWith (c.gameObject.name, "CoinSprite")) {
 			Destroy (c.gameObject);
 
 			//TODO: Add score printing element on screen!
 			score++;
 			Debug.Log ("Current Score: " + score);
 			scoreText.text = ("Score: " + score);
+		} else if (stringStartsWith (c.gameObject.name, "Opponent")) {
+			Debug.Log ("Opponent Object touched");
+			//score--;
+			//if (score < 0) {
+				//game over here.
+				scoreText.text = "GAME OVER";
+				isCrippled = true;
+				StopCoroutine (coroutine);
+			rb.velocity = new Vector2 (0.0f, 0.0f);
+			//}
 		}
 	}
 
-	// Update is called once per frame
-	void Update () {
-		//Keyboard driver. Geeks love keyboards, right? :)
+	void keyboardParseInput() {
 		movement = Input.GetAxis ("Vertical");
 		//Debug.Log ("Movement: " + movement + "\n");
 		if (movement >0f || movement <0f)
 			rb.velocity = new Vector2 (rb.velocity.x, movement * speed);
 		else 
 			rb.velocity = new Vector2 (rb.velocity.x, 0);
+		
+	}
 
-
-		//Touch driver: through mouse emulation
+	void mouseAndTouchParseInput() {
 		//Gets the world position of the mouse on the screen        
 		Vector2 mousePosition = Camera.main.ScreenToWorldPoint( Input.mousePosition );
 
@@ -94,37 +112,17 @@ public class MovementScript : MonoBehaviour {
 				this.transform.position = new Vector2(rb.position.x, Camera.main.ScreenToWorldPoint(Input.mousePosition).y);
 			}
 		}
+	}
 
-		//Disabled native touch driver as it feels clunky, if anyone could help with this, please do so :)
-		/*
-		if (Input.touchCount > 0) {
-			Touch t = Input.GetTouch (0);
-			Vector2 touchPos = Camera.main.ScreenToWorldPoint (t.position);
-			switch (t.phase) {
-			case TouchPhase.Began:
-				if (GetComponent<Collider2D> () == Physics2D.OverlapPoint (touchPos)) {
-					//dx = touchPos.x - transform.position.x;
-					//dy = 0.0f;
-					dy = touchPos.y - transform.position.y;
+	// Update is called once per frame
+	void Update () {
+//		Debug.Log ();
+		//Keyboard driver. Geeks love keyboards, right? :)
+		if (isCrippled == false) {
+			keyboardParseInput ();
 
-					// if touch begins within the ball collider
-					// then it is allowed to move
-					moveAllowed = true;
-				}
-				break;
-			case TouchPhase.Moved:
-				if (GetComponent<Collider2D> () == Physics2D.OverlapPoint (touchPos) && moveAllowed) {
-					rb.MovePosition (new Vector2 (0, touchPos.y - dy));
-					//rb.MovePosition (new Vector2 (0, Input.GetTouch(0).position.y));
-				}
-				break;
-			case TouchPhase.Ended:
-				moveAllowed = false;
-				break;
-			}
+			//Touch driver: through mouse emulation
+			mouseAndTouchParseInput ();
 		}
-
-		//if (Input.GetButtonDown("Jump"))
-		//	rb.velocity = new Vector2 (rb.velocity.x, jumpSpeed);*/
 	}
 }
