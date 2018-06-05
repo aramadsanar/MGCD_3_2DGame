@@ -7,6 +7,7 @@ using UnityEngine.UI;
 
 public class MovementScript : MonoBehaviour {
 
+	public static MovementScript instance = new MovementScript();
 	public float speed = 5f;
 	public float jumpSpeed = 5f;
 	public float movement = 0f;
@@ -22,6 +23,8 @@ public class MovementScript : MonoBehaviour {
 	private IEnumerator coroutine;
 	private bool isCrippled = false;
 	private int count = 0;
+	public float scrollSpeed = -1.5f;
+	public bool gameOver = false;
 	// Use this for initialization
 	void Start () {
 		rb = GetComponent<Rigidbody2D> ();
@@ -64,23 +67,27 @@ public class MovementScript : MonoBehaviour {
 		Debug.Log (c.gameObject.name);
 
 		//TODO: Add support for real object detection, such as vegetables, junk foods and bonus packs, anyone?
-		if (stringStartsWith (c.gameObject.name, "CoinSprite")) {
-			Destroy (c.gameObject);
 
-			//TODO: Add score printing element on screen!
-			score++;
-			Debug.Log ("Current Score: " + score);
-			scoreText.text = ("Score: " + score);
-		} else if (stringStartsWith (c.gameObject.name, "Opponent")) {
-			Debug.Log ("Opponent Object touched");
-			//score--;
-			//if (score < 0) {
+		if (!instance.gameOver) {
+			if (stringStartsWith (c.gameObject.name, "CoinSprite")) {
+				Destroy (c.gameObject);
+
+				//TODO: Add score printing element on screen!
+				score++;
+				Debug.Log ("Current Score: " + score);
+				scoreText.text = ("Score: " + score);
+			} else if (stringStartsWith (c.gameObject.name, "Opponent")) {
+				Debug.Log ("Opponent Object touched");
+				//score--;
+				//if (score < 0) {
 				//game over here.
 				scoreText.text = "GAME OVER";
 				isCrippled = true;
 				StopCoroutine (coroutine);
-			rb.velocity = new Vector2 (0.0f, 0.0f);
-			//}
+				rb.velocity = new Vector2 (0.0f, 0.0f);
+				instance.gameOver = true;
+				//}
+			}
 		}
 	}
 
