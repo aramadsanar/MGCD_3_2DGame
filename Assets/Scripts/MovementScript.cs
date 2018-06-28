@@ -25,12 +25,17 @@ public class MovementScript : MonoBehaviour {
 	private int count = 0;
 	public float scrollSpeed = -1.5f;
 	public bool gameOver = false;
+	private AudioSource audioSource;
+	public AudioClip audioClipOnEating;
+	public AudioClip audioClipOnDeath;
+
 	// Use this for initialization
 	void Start () {
 		rb = GetComponent<Rigidbody2D> ();
 		scoreText = GameObject.Find ("Text").GetComponent<Text> ();
 		coroutine = WaitAndSpawn (0.7f);
 		StartCoroutine (coroutine);
+		audioSource = gameObject.GetComponent<AudioSource> ();
 	}
 
 	private IEnumerator WaitAndSpawn(float waitTime)
@@ -76,6 +81,12 @@ public class MovementScript : MonoBehaviour {
 				score++;
 				Debug.Log ("Current Score: " + score);
 				scoreText.text = ("Score: " + score);
+
+
+
+				//audioSource.clip = audioClipOnEating;
+				audioSource.PlayOneShot(audioClipOnEating, 1.0F);
+				audioSource.PlayOneShot(audioClipOnDeath, 1.0F);
 			} else if (stringStartsWith (c.gameObject.name, "Opponent")) {
 				Debug.Log ("Opponent Object touched");
 				//score--;

@@ -1,11 +1,17 @@
 fileFormatVersion: 2
 guid: 4759848463c134abcac231d8c65fc17f
-timeCreated: 1521169318
+timeCreated: 1530193470
 licenseType: Free
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - rb: {instanceID: 0}
+  - scoreText: {instanceID: 0}
+  - coinPrefab: {instanceID: 0}
+  - opponentPrefab: {instanceID: 0}
+  - audioClipOnEating: {fileID: 8300000, guid: edb56917c04064bf697c07ab44b0739d, type: 3}
+  - audioClipOnDeath: {fileID: 8300000, guid: 82c8b3b2e4f9b4bc98856066c21cbf64, type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
